@@ -59,6 +59,3 @@ vendor/pkg/
 # Version control directories
 .hg/
 .git/
-
-
-Dockerfile
