@@ -1,0 +1,63 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+
+# DB
+*.db
+settings_db.mv.db
+
+# Docker project generated files to ignore
+docker/docker
+bundles/
+
+# Editor or environment-specific files
+.*.swp
+.DS_Store
+.idea/
+.vagrant*
+.gopath/
+.dotcloud
+*.orig
+*.test
+
+# Build artifacts
+a.out
+build_src
+vendor/pkg/
+
+# Version control directories
+.hg/
+.git/
+
+Dockerfile

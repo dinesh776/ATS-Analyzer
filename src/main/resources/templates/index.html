@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume ATS Score Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{CSS/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <p hidden="hidden" id="BaseUrl_Script" th:text="${requestUri}"></p>
+    <div class="container">
+        <a class="navbar-brand" href="#">ATS Analyzer</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto"></ul>
+            <div class="d-flex align-items-center">
+                <div class="settings-icon" id="settingsToggle" title="Settings">
+                    <i class="bi bi-gear-fill"></i>
+                </div>
+                <div class="theme-icon ms-2" id="themeToggle" title="Toggle theme">
+                    <i class="bi bi-sun-fill" id="themeIcon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+ <script th:if="${successMessage}" th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Your Settings have been saved",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+    </script>
+    <script th:if="${errorMessage}" th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: /*[[${errorMessage}]]*/ '',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        });
+    </script>
+    <div class="header">
+        <h1>Resume ATS Score Calculator</h1>
+        <p class="lead">Upload your resume to get an ATS compatibility score and improvement suggestions.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Upload Resume</h3>
+                </div>
+
+                <div class="card-body">
+                    <form id="resumeForm">
+                        <div class="mb-3">
+                            <label for="resumeFile" class="form-label">Select Resume (PDF only)</label>
+                            <input class="form-control" type="file" id="resumeFile" accept="application/pdf" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="jobDescription" class="form-label">Job Description (Optional)</label>
+                            <textarea class="form-control" id="jobDescription" rows="4" placeholder="Paste the job description here for a more targeted analysis"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Analyze Resume</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div id="loadingIndicator" class="text-center hidden">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Analyzing your resume...</p>
+            </div>
+
+            <div id="resultSection" class="hidden">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>ATS Score</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="score-container">
+                            <div class="score-circle">
+                                <canvas id="scoreCanvas" width="200" height="200"></canvas>
+                                <div class="score-display" id="scoreDisplay">92</div>
+                                <div class="score-label">ATS Score</div>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-4 mb-3">Category Scores</h4>
+                        <div class="category-score">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Format and Structure</span>
+                                <span class="score-value" id="formatScore">0/20</span>
+                            </div>
+                            <div class="progress">
+                                <div id="formatProgress" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="20"></div>
+                            </div>
+                        </div>
+
+                        <div class="category-score">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Keywords and Relevance</span>
+                                <span class="score-value" id="keywordsScore">0/30</span>
+                            </div>
+                            <div class="progress">
+                                <div id="keywordsProgress" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="30"></div>
+                            </div>
+                        </div>
+
+                        <div class="category-score">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Quantifiable Achievements</span>
+                                <span class="score-value" id="achievementsScore">0/20</span>
+                            </div>
+                            <div class="progress">
+                                <div id="achievementsProgress" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="20"></div>
+                            </div>
+                        </div>
+
+                        <div class="category-score">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Skills and Qualifications</span>
+                                <span class="score-value" id="skillsScore">0/30</span>
+                            </div>
+                            <div class="progress">
+                                <div id="skillsProgress" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="30"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Recommendation</h3>
+                    </div>
+                    <div class="card-body">
+                        <p id="recommendation"></p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h3>Strengths</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul id="strengths"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-danger text-white">
+                                <h3>Areas to Improve</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul id="weaknesses"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Settings Modal -->
+<div class="modal fade settings-modal" id="settingsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="settingsForm" method="post" th:object="${settings}" th:action="@{/settings}">
+                    <div class="mb-3">
+                        <label for="baseUrl" class="form-label">Base URL</label>
+                        <input type="url" class="form-control" id="baseUrl" required
+                               placeholder="eg. https://api.groq.com/openai" th:field="${settings.baseUrl}" th:value="${settings.getBaseUrl()}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="apiKey" class="form-label">API Key</label>
+                        <input type="text" class="form-control" id="apiKey" required th:field="*{apiKey}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="model" class="form-label">Model</label>
+                        <input class="form-control" type="text" id="model" placeholder="eg. GPT-3.5 Turbo" th:field="${settings.model}" th:value="${settings.getModel()}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="samplingRate" class="form-label">Sampling Rate</label>
+                        <input type="number" class="form-control" id="samplingRate"
+                               min="0" max="1" step="0.1" required
+                               th:field="${settings.samplingRate}" placeholder="0.7"/>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="saveSettings">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{JS/script.js}"></script>
+</body>
+</html>

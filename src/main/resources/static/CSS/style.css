@@ -1,0 +1,201 @@
+:root[data-bs-theme="dark"] {
+    --bg-gradient: linear-gradient(135deg, #1a1c2c 0%, #2d2b3e 100%);
+    --card-bg: #2d2b3e;
+    --text-color: #ffffff;
+}
+
+:root[data-bs-theme="light"] {
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --card-bg: #ffffff;
+    --text-color: #000000;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: var(--bg-gradient);
+    padding: 2rem 0;
+    color: var(--text-color);
+    padding-top: 5rem;
+}
+
+.navbar {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+[data-bs-theme="light"] .navbar {
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-bs-theme="light"] .navbar-nav .nav-link,
+[data-bs-theme="light"] .navbar-brand {
+    color: #000 !important;
+}
+
+[data-bs-theme="dark"] .navbar {
+    background: rgba(33, 37, 41, 0.9) !important;
+}
+
+[data-bs-theme="dark"] .navbar-nav .nav-link,
+[data-bs-theme="dark"] .navbar-brand {
+    color: #fff !important;
+}
+
+.theme-icon {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.theme-icon:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.header {
+    text-align: center;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+}
+.score-container {
+    text-align: center;
+    position: relative;
+    margin: 2rem auto;
+    width: 200px;
+    height: 200px;
+}
+
+.score-circle {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.score-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3.5rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    z-index: 2;
+}
+
+.score-label {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.category-score {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.category-score:hover {
+    transform: translateX(5px);
+}
+
+.category-score .progress {
+    height: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.category-score .score-value {
+    font-weight: 600;
+    color: #764ba2;
+}
+
+@keyframes scoreIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.progress {
+    border-radius: 12px;
+    background-color: #f0f3f6;
+}
+.progress-bar {
+    transition: width 1.5s ease-in-out;
+    background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 0.8rem 2rem;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+}
+#resultSection {
+    animation: slideIn 0.5s ease-out;
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.hidden {
+    display: none !important;
+}
+
+.settings-icon {
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-modal .form-label {
+    font-weight: 500;
+}
+
+.settings-modal .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.settings-modal .modal-footer .btn {
+    padding: 0.5rem 1.5rem;
+}
+
+.settings-modal .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
